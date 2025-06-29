@@ -1,0 +1,16 @@
+{{- if .Values.nfs.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: {{ .Values.nfs.pvName }}
+spec:
+  capacity:
+    storage: {{ .Values.nfs.capacity }}
+  accessModes:
+{{ toYaml .Values.nfs.accessModes | indent 4 }}
+  persistentVolumeReclaimPolicy: {{ .Values.nfs.reclaimPolicy }}
+  storageClassName: ""  # Static binding
+  nfs:
+    server: {{ .Values.nfs.serverIP }}
+    path: {{ .Values.nfs.serverPath }}
+{{- end }}

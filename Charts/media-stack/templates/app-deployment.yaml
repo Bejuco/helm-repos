@@ -1,0 +1,42 @@
+{{- range $name, $app := .Values.apps }}
+{{- if $app.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $name }}
+  namespace: {{ $.Values.global.namespace }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ $name }}
+  template:
+    metadata:
+      labels:
+        app: {{ $name }}
+    spec:
+      containers:
+      - name: {{ $name }}
+        image: {{ $app.image }}:{{ $app.tag | default "latest" }}
+        ports:
+        - containerPort: {{ $app.webPort | default $app.port }}
+        {{- if eq $name "qbittorrent" }}
+        - containerPort: {{ $app.peerPort }}
+        - containerPort: {{ $app.peerPort }}
+          protocol: UDP
+        {{- end }}
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: media
+          mountPath: /media
+      volumes:
+      - name: config
+        persistentVolumeClaim:
+          claimName: {{ $name }}-config
+      - name: media
+        persistentVolumeClaim:
+          claimName: {{ $.Values.nfs.pvName }}
+---
+{{- end }}
+{{- end }}

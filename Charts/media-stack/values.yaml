@@ -1,0 +1,56 @@
+global:
+  namespace: media
+  storageClass: longhorn
+
+nfs:
+  enabled: true
+  pvName: nfs-media-data
+  serverIP: 192.168.5.5         # 🔁 Change this when you move NFS
+  serverPath: /volume1/data     # 🔁 Change this if export path changes
+  capacity: 10Gi
+  accessModes:
+    - ReadWriteMany
+  reclaimPolicy: Retain
+
+apps:
+  qbittorrent:
+    enabled: true
+    image: linuxserver/qbittorrent
+    tag: 5.1.0
+    webPort: 8080
+    peerPort: 6881
+    ingressHost: qbittorrent.k.jpcortesp.place
+  jackett:
+    enabled: true
+    image: linuxserver/jackett
+    tag: latest
+    port: 9117
+    ingressHost: jackett.k.jpcortesp.place
+
+  prowlarr:
+    enabled: true
+    image: linuxserver/prowlarr
+    tag: latest
+    port: 9696
+    ingressHost: prowlarr.k.jpcortesp.place
+
+  radarr:
+    enabled: true
+    image: linuxserver/radarr
+    tag: latest
+    port: 7878
+    ingressHost: radarr.k.jpcortesp.place
+
+  sonarr:
+    enabled: true
+    image: linuxserver/sonarr
+    tag: latest
+    port: 8989
+    ingressHost: sonarr.k.jpcortesp.place
+
+  bazarr:
+    enabled: true
+    image: linuxserver/bazarr
+    tag: latest
+    port: 6767
+    ingressHost: bazarr.k.jpcortesp.place

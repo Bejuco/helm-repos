@@ -1,0 +1,15 @@
+{{- if .Values.nfs.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.nfs.pvName }}
+  namespace: {{ .Values.global.namespace }}
+spec:
+  accessModes:
+{{ toYaml .Values.nfs.accessModes | indent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.nfs.capacity }}
+  storageClassName: ""         # must be empty for static binding
+  volumeName: {{ .Values.nfs.pvName }}
+{{- end }}
